@@ -1,11 +1,11 @@
 class Solution {
     public boolean check(int[] nums) {
-        int cnt = 0, n = nums.length;
-
-        for (int i = 0; i < n; i++) {
-            if (nums[i] > nums[(i+1) % n] && ++cnt > 1) return false;
+        int n = nums.length;
+        int cnt = 0;
+        
+        for (int i = 1; i < n && cnt <= 1; i++) {
+            if (nums[i] < nums[i - 1]) cnt++;
         }
-            
-        return cnt <= 1;
+        return (nums[0] >= nums[n - 1] && cnt == 1) || cnt == 0;
     }
 }
