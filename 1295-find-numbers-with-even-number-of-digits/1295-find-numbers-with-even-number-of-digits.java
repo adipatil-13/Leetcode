@@ -1,17 +1,15 @@
 class Solution {
     public int findNumbers(int[] nums) {
-        String[] stNums = new String[nums.length];
-
-        for (int i = 0; i < stNums.length; i++) {
-            stNums[i] = String.valueOf(nums[i]);
-        }
         int count = 0;
-
-        for (int i = 0; i < stNums.length; i++) {
-            if (stNums[i].length() % 2 == 0) {
-                count++;
-            } 
+        for (int ele : nums) {
+            if (String.valueOf(ele).length() % 2 == 0) count++;
         }
         return count;
     }
 }
+
+// int num = 0;
+// for(int ele : nums){
+//     if (((int)Math.log10(ele) + 1) % 2 == 0) num++;
+// }
+// return num;
