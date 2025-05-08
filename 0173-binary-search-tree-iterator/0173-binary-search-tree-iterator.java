@@ -1,29 +1,25 @@
 class BSTIterator {
-    private final Stack<TreeNode> stack;
+    LinkedList<Integer> list = new LinkedList<>();
 
     public BSTIterator(TreeNode root) {
-        stack = new Stack<>();
-        TreeNode curr = root;
-
-        while (curr != null) {
-            stack.push(curr);
-            curr = curr.left;
-        }
+        traverse(root);
     }
     
     public int next() {
-        TreeNode node = stack.pop();
-        TreeNode curr = node.right;
-
-        while (curr != null) {
-            stack.push(curr);
-            curr = curr.left;
-        }
-        
-        return node.val;
+        return list.poll();
     }
     
     public boolean hasNext() {
-        return !stack.isEmpty();
+        return list.peek() != null;
+    }
+    
+    private void traverse(TreeNode node) {
+        if (node == null) return;
+
+        traverse(node.left);
+        list.offer(node.val);
+        traverse(node.right);
+
+        return;
     }
 }
