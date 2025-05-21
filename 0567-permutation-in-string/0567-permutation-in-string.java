@@ -1,31 +1,41 @@
 class Solution {
+    private boolean areVectorsEqual(int[] a, int[] b) {
+        for (int i = 0; i < 26; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean checkInclusion(String s1, String s2) {
-        if (s1.length() > s2.length()) return false;
+        if (s2.length() < s1.length()) return false;
 
-        Map<Character, Integer> s1map = new HashMap<>();
-        Map<Character, Integer> s2map = new HashMap<>();
-
-        for (int i = 0; i < s1.length(); i++) {
-            s1map.put(s1.charAt(i), s1map.getOrDefault(s1.charAt(i), 0) + 1);
-            s2map.put(s2.charAt(i), s2map.getOrDefault(s2.charAt(i), 0) + 1);
+        int[] freqS1 = new int[26];
+        for (char c : s1.toCharArray()) {
+            freqS1[c - 'a']++;
         }
 
-        if (s1map.equals(s2map)) return true;
+        int[] freqS2 = new int[26];
+        int i = 0, j = 0;
 
-        int left = 0;
-        for (int right = s1.length(); right < s2.length(); right++) {
-            char charRight = s2.charAt(right);
-            s2map.put(charRight, s2map.getOrDefault(charRight, 0) + 1);
+        while (j < s2.length()) {
+            freqS2[s2.charAt(j) - 'a']++;
 
-            char charLeft = s2.charAt(left);
-            s2map.put(charLeft, s2map.get(charLeft) - 1);
-            if (s2map.get(charLeft) == 0) {
-                s2map.remove(charLeft);
+            if (j - i + 1 == s1.length()) {
+                if (areVectorsEqual(freqS1, freqS2)) {
+                    return true;
+                }
             }
-            left++;
 
-            if (s1map.equals(s2map)) return true;
-        } 
+            if (j - i + 1 < s1.length()) {
+                j++;
+            } else {
+                freqS2[s2.charAt(i) - 'a']--;
+                i++;
+                j++;
+            }
+        }
         return false;
     }
 }
