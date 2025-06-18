@@ -1,32 +1,16 @@
 class Solution {
     public int[][] divideArray(int[] nums, int k) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int num : nums) {
-            pq.offer(num);
+        Arrays.sort(nums);
+
+        int[][] res = new int[nums.length / 3][3];
+
+        for (int i = 0; i < nums.length; i += 3) {
+            int a = nums[i], b = nums[i + 1], c = nums[i + 2];
+            if (c - a > k) return new int[0][];
+            res[i / 3][0] = a;
+            res[i / 3][1] = b;
+            res[i / 3][2] = c;
         }
-
-        List<List<Integer>> list = new ArrayList<>();
-
-        while (pq.size() >= 3) {
-            int low = pq.poll();
-            int mid = pq.poll();
-            int high = pq.poll();
-
-            if (high - low <= k) {
-                list.add(Arrays.asList(low, mid, high));
-            } else {
-                return new int[][]{};
-            }
-        }
-
-        int[][] res = new int[list.size()][3];
-        for (int i = 0; i < list.size(); i++) {
-            List<Integer> triplet = list.get(i);
-            res[i][0] = triplet.get(0);
-            res[i][1] = triplet.get(1);
-            res[i][2] = triplet.get(2);
-        }
-
         return res;
     }
 }
