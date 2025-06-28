@@ -1,24 +1,22 @@
 class Solution {
     public int thirdMax(int[] nums) {
-        long first = Long.MIN_VALUE, second = Long.MIN_VALUE, third = Long.MIN_VALUE;
-        HashSet<Long> seen = new HashSet<>();
+        Integer first = null;
+        Integer second = null;
+        Integer third = null;
 
-        for (int num : nums) {
-            if (!seen.contains((long)num)) {
-                seen.add((long)num);
-
-                if (num > first) {
-                    third = second;
-                    second = first;
-                    first = num;
-                } else if (num > second) {
-                    third = second;
-                    second = num;
-                } else if (num > third) {
-                    third = num;
-                }
+        for (Integer num : nums) {
+            if (num.equals(first) || num.equals(second) || num.equals(third)) continue;
+            if (first == null || num > first) {
+                third = second;
+                second = first;
+                first = num;
+            } else if (second == null || num > second) {
+                third = second;
+                second = num;
+            } else if (third == null || num > third) {
+                third = num;
             }
         }
-        return third == Long.MIN_VALUE ? (int)first : (int)third;
+        return third == null ? first : third;
     }
 }
