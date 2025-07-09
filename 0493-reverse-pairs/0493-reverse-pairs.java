@@ -2,54 +2,44 @@ class Solution {
     public int reversePairs(int[] nums) {
         return mergeSort(nums, 0, nums.length - 1);
     }
-    public int countPairs(int[] arr, int low, int mid, int high) {
-        int cnt = 0;
-        int right = mid + 1;
-
-        for (int i = low; i <= mid; i++) {
-            while (right <= high && (arr[i] / 2.0 > arr[right]))
-                right++;
-            cnt += (right - (mid + 1));
-        }
-        return cnt;
-    }
-
-    public int mergeSort(int[] arr, int low, int high) {
-        int cnt = 0;
-        if (low >= high)
-            return cnt;
-        int mid = (low + high) / 2;
-        cnt += mergeSort(arr, low, mid);
-        cnt += mergeSort(arr, mid + 1, high);
-        cnt += countPairs(arr, low, mid, high);
-        merge(arr, low, mid, high);
-        return cnt;
-    }
-
-    public void merge(int[] arr, int low, int mid, int high){
-        ArrayList<Integer> temp = new ArrayList<>();
+    
+    private int mergeSort(int[] nums, int left, int right) {
+        if (left >= right) return 0;
         
-        int left = low;
-        int right = mid + 1;
-
-        while (left <= mid && right <= high) {
-            if (arr[left] <= arr[right]) {
-                temp.add(arr[left++]);
+        int mid = left + (right - left) / 2;
+        int count = mergeSort(nums, left, mid) + mergeSort(nums, mid + 1, right);
+        
+        // Count reverse pairs
+        int j = mid + 1;
+        for (int i = left; i <= mid; i++) {
+            while (j <= right && nums[i] > 2L * nums[j]) {
+                j++;
             }
-            else {
-                temp.add(arr[right++]);
+            count += j - (mid + 1);
+        }
+        
+        // Merge the arrays
+        merge(nums, left, mid, right);
+        return count;
+    }
+    
+    private void merge(int[] nums, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left, j = mid + 1, k = 0;
+        
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                temp[k++] = nums[i++];
+            } else {
+                temp[k++] = nums[j++];
             }
         }
-
-        while (left <= mid) {
-            temp.add(arr[left++]);
-        }
-        while (right <= high) {
-            temp.add(arr[right++]);
-        }
-
-        for (int i = low; i <= high; i++) {
-            arr[i] = temp.get(i - low);
+        
+        while (i <= mid) temp[k++] = nums[i++];
+        while (j <= right) temp[k++] = nums[j++];
+        
+        for (i = left; i <= right; i++) {
+            nums[i] = temp[i - left];
         }
     }
 }
