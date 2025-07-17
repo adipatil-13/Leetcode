@@ -23,7 +23,6 @@ class Solution {
             res.add(intervals[i]);
             i++;
         }
-
         return res.toArray(new int[res.size()][]);
     }
 }
