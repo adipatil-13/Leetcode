@@ -1,36 +1,38 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-        int[] indegree = new int[numCourses];
+        List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
             adj.add(new ArrayList<>());
         }
+
         for (int[] pre : prerequisites) {
             int u = pre[0];
             int v = pre[1];
-            adj.get(u).add(v);
-            indegree[v]++;
+            adj.get(v).add(u);
         }
 
-        Queue<Integer> queue = new LinkedList<>();
+        // 0 = unvisited, 1 = visiting, 2 = visited
+        int[] visited = new int[numCourses];
+
         for (int i = 0; i < numCourses; i++) {
-            if (indegree[i] == 0) {
-                queue.add(i);
-            }
+            if (hasCycle(i, adj, visited)) return false;
         }
 
-        int count = 0;
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            count++;
-            for (int neighbor : adj.get(node)) {
-                indegree[neighbor]--;
-                if (indegree[neighbor] == 0) {
-                    queue.add(neighbor);
-                }
+        return true;
+    }
+
+    private boolean hasCycle(int node, List<List<Integer>> adj, int[] visited) {
+        if (visited[node] == 1) return true;
+        if (visited[node] == 2) return false;
+
+        visited[node] = 1;
+
+        for (int neighbor : adj.get(node)) {
+            if (hasCycle(neighbor, adj, visited)) {
+                return true;
             }
         }
-        if (count == numCourses) return true;
+        visited[node] = 2;
         return false;
     }
 }
