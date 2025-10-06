@@ -1,39 +1,30 @@
 class Solution {
     public int swimInWater(int[][] grid) {
-        int m = grid.length, n = grid[0].length;
-        
-        List<int[]> edges = new ArrayList<>();
-        
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i > 0)
-                    edges.add(new int[]{Math.max(grid[i][j], grid[i - 1][j]), i * n + j, (i - 1) * n + j});
-                if (j > 0)
-                    edges.add(new int[]{Math.max(grid[i][j], grid[i][j - 1]), i * n + j, i * n + (j - 1)});
+        int n = grid.length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        boolean[][] vis = new boolean[n][n];
+
+        pq.add(new int[]{grid[0][0], 0, 0});
+        vis[0][0] = true;
+
+        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int ele = curr[0], r = curr[1], c = curr[2];
+
+            if (r == n - 1 && c == n - 1) return ele;
+
+            for (int[] dir : dirs) {
+                int nrow = r + dir[0];
+                int ncol = c + dir[1];
+
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < n && !vis[nrow][ncol]) {
+                    vis[nrow][ncol] = true;
+                    pq.add(new int[]{Math.max(ele, grid[nrow][ncol]), nrow, ncol});
+                }
             }
         }
-        
-        Collections.sort(edges, (a, b) -> a[0] - b[0]);
-
-        int[] parent = new int[m * n];
-
-        for (int i = 0; i < m * n; i++) parent[i] = i;
-        
-        for (int[] edge : edges) {
-            union(parent, edge[1], edge[2]);
-            if (find(parent, 0) == find(parent, m * n - 1))
-                return edge[0];
-        }
-        return grid[0][0];
-    }
-    
-    private int find(int[] parent, int x) {
-        if (parent[x] != x)
-            parent[x] = find(parent, parent[x]);
-        return parent[x];
-    }
-    
-    private void union(int[] parent, int x, int y) {
-        parent[find(parent, x)] = find(parent, y);
+        return -1;
     }
 }
