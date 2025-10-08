@@ -1,23 +1,17 @@
 class Solution {
     public int uniquePaths(int m, int n) {
-        // Space efficient tabulation solution - O(m * n), O(n)
-        int[] prev = new int[n];
+        int[][] dp = new int[m][n];
 
-        for (int i = 0; i < m; i++) {
-            int[] temp = new int[n];
+		for (int i = 0; i < m; i++) 
+		    dp[i][0] = 1;
+		for (int j = 0; j < n; j++)
+		    dp[0][j] = 1;
 
-            for (int j = 0; j < n; j++) {
-                if (i == 0 && j == 0) {
-                    temp[j] = 1;
-                    continue;
-                }
-                int up = 0, left = 0;
-                if (i > 0) up = prev[j];
-                if (j > 0) left = temp[j - 1];
-                temp[j] = up + left;
-            }
-            prev = temp;
-        }
-        return prev[n - 1];
+		for (int i = 1; i < m; i++) {
+		    for (int j = 1; j < n; j++) {
+		        dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+		    }
+	    }
+		return dp[m - 1][n - 1];   
     }
 }
