@@ -3,13 +3,17 @@ class Solution {
         if (s == null || s.length() < 2) return false;
         if (s.length() == 2) return s.charAt(0) == s.charAt(1);
         
-        while (s.length() > 2) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i + 1 < s.length(); i++) {
-                sb.append((s.charAt(i) - '0' + s.charAt(i + 1) - '0') % 10);
+        int[] arr = new int[s.length()];
+
+        for (int i = 0; i < arr.length; i++)
+            arr[i] = s.charAt(i) - '0';
+    
+        for (int i = arr.length; i > 2; i--) {
+            for (int j = 0; j < i - 1; j++) {
+                arr[j] = (arr[j] + arr[j + 1]) % 10;
             }
-            s = sb.toString();
         }
-        return s.charAt(0) == s.charAt(1);
+
+        return arr[0] == arr[1];
     }
 }
