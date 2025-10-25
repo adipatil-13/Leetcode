@@ -1,18 +1,19 @@
 class Solution {
     public int totalMoney(int n) {
-        int res = 0;
-
-        int monday = 1;
-
-        while (n > 0) {
-            int money = monday;
-            for (int i = 1; i <= Math.min(n, 7); i++) {
-                res += money;
-                money++;
+        int res = 0, weekStart = 0, day = 1;     
+        
+        while (n != 0) {
+            res += weekStart + day;
+            
+            if (day % 7 == 0) {
+                day = 1;
+                weekStart++;
+            } else {
+                day++;
             }
-            n -= 7;
-            monday++;
+            n--;
         }
+        
         return res;
     }
 }
