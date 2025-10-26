@@ -2,34 +2,29 @@ class Solution {
     public boolean canPartition(int[] nums) {
         int n = nums.length;
         int total = 0;
-        for (int num : nums) 
-            total += num;
-        
-        if (total % 2 == 1) return false;
+        for (int num : nums) total += num;
+        if (total % 2 != 0) return false;
+        int targetSum = total / 2;
 
-        int target = total / 2;
+        boolean[][] dp = new boolean[n][targetSum + 1];
 
-        int [][] dp = new int[n][target + 1];
+        // Base case: sum 0 is always possible
+        for (int i = 0; i < n; i++) dp[i][0] = true;
 
-        for (int[] row : dp) {
-            Arrays.fill(row, -1);
+        // Initialize first row
+        if (nums[0] <= targetSum) dp[0][nums[0]] = true;
+
+        // Fill DP table
+        for (int idx = 1; idx < n; idx++) {
+            for (int target = 1; target <= targetSum; target++) {
+                boolean notTaken = dp[idx - 1][target];
+                boolean taken = false;
+                if (nums[idx] <= target) {
+                    taken = dp[idx - 1][target - nums[idx]];
+                }
+                dp[idx][target] = notTaken || taken;
+            }
         }
-        return subsetSum(n - 1, target, nums, dp);
-    }
-    private boolean subsetSum(int idx, int target, int[] nums, int[][] dp) {
-        if (target == 0) return true;
-        if (idx == 0) return nums[0] == target;
-
-        if (dp[idx][target] != -1) return dp[idx][target] == 1;
-
-        boolean notTaken = subsetSum(idx - 1, target, nums, dp);
-
-        boolean taken = false;
-        if (nums[idx] <= target) {
-            taken = subsetSum(idx - 1, target - nums[idx], nums, dp);
-        }
-
-        dp[idx][target] = (notTaken || taken) ? 1 : 0;
-        return notTaken || taken;
+        return dp[n - 1][targetSum];
     }
 }
