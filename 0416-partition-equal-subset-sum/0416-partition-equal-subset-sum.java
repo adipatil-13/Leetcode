@@ -1,30 +1,43 @@
 class Solution {
     public boolean canPartition(int[] nums) {
         int n = nums.length;
-        int total = 0;
-        for (int num : nums) total += num;
-        if (total % 2 != 0) return false;
-        int targetSum = total / 2;
 
-        boolean[][] dp = new boolean[n][targetSum + 1];
+        int totalSum = 0;
+        for (int num : nums) totalSum += num;
 
-        // Base case: sum 0 is always possible
-        for (int i = 0; i < n; i++) dp[i][0] = true;
+        // If the sum is odd, partition into equal subsets is impossible
+        if (totalSum % 2 != 0)
+            return false;
 
-        // Initialize first row
-        if (nums[0] <= targetSum) dp[0][nums[0]] = true;
+        int target = totalSum / 2;
 
-        // Fill DP table
-        for (int idx = 1; idx < n; idx++) {
-            for (int target = 1; target <= targetSum; target++) {
-                boolean notTaken = dp[idx - 1][target];
+        // prev[sum] indicates if a subset with 'sum' is possible so far
+        boolean[] prev = new boolean[target + 1];
+        prev[0] = true;
+
+        // Initialize with first element
+        if (nums[0] <= target)
+            prev[nums[0]] = true;
+
+        // Iterate over all remaining elements
+        for (int i = 1; i < n; i++) {
+            // cur[sum] will store possibilities for current element
+            boolean[] cur = new boolean[target + 1];
+            cur[0] = true;
+
+            for (int sum = 1; sum <= target; sum++) {
+                boolean notTaken = prev[sum];
+
                 boolean taken = false;
-                if (nums[idx] <= target) {
-                    taken = dp[idx - 1][target - nums[idx]];
-                }
-                dp[idx][target] = notTaken || taken;
+                if (nums[i] <= sum)
+                    taken = prev[sum - nums[i]];
+
+                // Current sum possible if either option is true
+                cur[sum] = notTaken || taken;
             }
+            // Move to next element
+            prev = cur;
         }
-        return dp[n - 1][targetSum];
+        return prev[target];
     }
 }
