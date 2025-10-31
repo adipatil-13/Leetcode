@@ -18,7 +18,6 @@ class Solution {
                         min = Math.min(min, freq[k]);
                     }
                 }
-
                 res += max - min;
             }
         }
