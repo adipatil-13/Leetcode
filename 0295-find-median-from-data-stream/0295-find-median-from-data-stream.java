@@ -3,7 +3,7 @@ class MedianFinder {
     private PriorityQueue<Integer> right; //min heap
 
     public MedianFinder() {
-        left = new PriorityQueue<>(Collections.reverseOrder());
+        left = new PriorityQueue<>((a, b) -> b - a);
         right = new PriorityQueue<>();
     }
     
@@ -22,9 +22,8 @@ class MedianFinder {
     }
     
     public double findMedian() {
-        if (left.size() > right.size()) {
-            return left.peek();
-        }
+        if (left.size() != right.size()) 
+            return (double) left.peek();
         return (left.peek() + right.peek()) / 2.0;
     }
 }
